@@ -11,6 +11,7 @@ namespace XmasChecker
             {
                 return true;
             }
+
             return false;
         }
     }

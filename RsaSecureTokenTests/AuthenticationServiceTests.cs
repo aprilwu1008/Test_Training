@@ -16,8 +16,8 @@ namespace RsaSecureToken.Tests
         {
             var sut = new AuthenticationService();
 
-			// implement your own act
-            var actual = sut.IsValid("","");
+            // implement your own act
+            var actual = sut.IsValid("April", "");
 
             Assert.IsTrue(actual);
         }

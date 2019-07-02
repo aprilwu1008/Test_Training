@@ -6,6 +6,29 @@ using System.Text;
 
 namespace IsolatedByInheritanceAndOverride
 {
+    /// <summary>
+    /// not complete yet
+    /// </summary>
+    public class BookDao
+    {
+        internal void Insert(Order order)
+        {
+            // directly depend on some web service
+            //var client = new HttpClient();
+            //var response = client.PostAsync<Order>("http://api.joey.io/Order", order, new JsonMediaTypeFormatter()).Result;
+            //response.EnsureSuccessStatusCode();
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Order
+    {
+        public string CustomerName { get; set; }
+        public int Price { get; set; }
+        public string ProductName { get; set; }
+        public string Type { get; set; }
+    }
+
     public class OrderService
     {
         /// <summary>
@@ -27,7 +50,7 @@ namespace IsolatedByInheritanceAndOverride
             }
         }
 
-        private List<Order> GetOrders()
+        protected virtual List<Order> GetOrders()
         {
             // parse csv file to get orders
             var result = new List<Order>();
@@ -67,32 +90,6 @@ namespace IsolatedByInheritanceAndOverride
             };
 
             return result;
-        }
-    }
-
-    public class Order
-    {
-        public string Type { get; set; }
-
-        public int Price { get; set; }
-
-        public string ProductName { get; set; }
-
-        public string CustomerName { get; set; }
-    }
-
-    /// <summary>
-    /// not complete yet
-    /// </summary>
-    public class BookDao
-    {
-        internal void Insert(Order order)
-        {
-            // directly depend on some web service
-            //var client = new HttpClient();
-            //var response = client.PostAsync<Order>("http://api.joey.io/Order", order, new JsonMediaTypeFormatter()).Result;
-            //response.EnsureSuccessStatusCode();
-            throw new NotImplementedException();
         }
     }
 }
