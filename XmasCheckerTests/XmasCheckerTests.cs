@@ -1,28 +1,51 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace XmasChecker.Tests
 {
-	[TestClass()]
-	public class XmasCheckerTests
-	{
-		[TestMethod()]
-		public void Today_is_not_xmas()
-		{
-			var xmasChecker = new XmasChecker();
+    public class FakeXmasChecker : XmasChecker
+    {
+        internal DateTime _today;
 
-			var actual = xmasChecker.IsTodayXmas();
+        public override bool IsTodayXmas()
+        {
+            if (_today.Month == 12 && _today.Day == 25)
+            {
+                return true;
+            }
 
-			Assert.AreEqual(false, actual);
-		}
+            return false;
+        }
 
-		[TestMethod()]
-		public void Today_is_xmas()
-		{
-			var xmasChecker = new XmasChecker();
+        public void SetToday(DateTime today)
+        {
+            _today = today;
+        }
+    }
 
-			var actual = xmasChecker.IsTodayXmas();
+    [TestClass()]
+    public class XmasCheckerTests
+    {
+        [TestMethod()]
+        public void Today_is_not_xmas()
+        {
+            var xmasChecker = new FakeXmasChecker();
+            DateTime today = new DateTime(2019, 12, 24);
+            xmasChecker.SetToday(today);
+            var actual = xmasChecker.IsTodayXmas();
 
-			Assert.AreEqual(true, actual);
-		}
-	}
+            Assert.AreEqual(false, actual);
+        }
+
+        [TestMethod()]
+        public void Today_is_xmas()
+        {
+            var xmasChecker = new FakeXmasChecker();
+            DateTime today = new DateTime(2019, 12, 25);
+            xmasChecker.SetToday(today);
+            var actual = xmasChecker.IsTodayXmas();
+
+            Assert.AreEqual(true, actual);
+        }
+    }
 }

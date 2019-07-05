@@ -4,7 +4,7 @@ namespace XmasChecker
 {
     public class XmasChecker
     {
-        public bool IsTodayXmas()
+        public virtual bool IsTodayXmas()
         {
             var today = DateTime.Today;
             if (today.Month == 12 && today.Day == 25)
@@ -13,6 +13,11 @@ namespace XmasChecker
             }
 
             return false;
+        }
+
+        public virtual bool IsTodayXmas(DateTime today)
+        {
+            throw new NotImplementedException();
         }
     }
 }
