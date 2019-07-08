@@ -24,20 +24,5 @@ namespace IsolatedByInheritanceAndOverride.Tests
             //verify bookDao.Insert() twice
             Assert.Fail();
         }
-
-        public class FakeOrderService : OrderService
-        {
-            protected override List<Order> GetOrders()
-            {
-                var result = new List<Order>();
-                var st = "商品1,        Book,  100, Kyo,商品2,        DVD,   200, Kyo,商品3,        Book,  300, Joey";
-                string[] line = st.Trim().Split(',');
-                foreach (var s in line)
-                {
-                    //result.Add(s);
-                }
-                return base.GetOrders();
-            }
-        }
     }
 }
