@@ -17,12 +17,14 @@ namespace IsolatedByInheritanceAndOverride.Tests
         [TestMethod()]
         public void Test_SyncBookOrders_3_Orders_Only_2_book_order()
         {
+            var target = new OrderService();
+            target.SyncBookOrders();
+
             //Try to isolate dependency to unit test
 
             //var target = new OrderService();
             //target.SyncBookOrders();
             //verify bookDao.Insert() twice
-            Assert.Fail();
         }
     }
 }
