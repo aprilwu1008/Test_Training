@@ -6,17 +6,18 @@ using System.Text;
 
 namespace IsolatedByInheritanceAndOverride
 {
+    public interface IBookDao
+    {
+        void Insert(Order order);
+    }
+
     /// <summary>
     /// not complete yet
     /// </summary>
-    public class BookDao
+    public class BookDao : IBookDao
     {
-        internal void Insert(Order order)
+        public void Insert(Order order)
         {
-            // directly depend on some web service
-            //var client = new HttpClient();
-            //var response = client.PostAsync<Order>("http://api.joey.io/Order", order, new JsonMediaTypeFormatter()).Result;
-            //response.EnsureSuccessStatusCode();
             throw new NotImplementedException();
         }
     }
@@ -31,10 +32,22 @@ namespace IsolatedByInheritanceAndOverride
 
     public class OrderService
     {
+        private IBookDao _bookDao;
+
         /// <summary>
         /// The file path
         /// </summary>
         private string _filePath = @"C:\temp\testOrders.csv";
+
+        public OrderService()
+        {
+            _bookDao = new BookDao();
+        }
+
+        public OrderService(IBookDao bookDao)
+        {
+            _bookDao = bookDao;
+        }
 
         public void SyncBookOrders()
         {
@@ -43,14 +56,14 @@ namespace IsolatedByInheritanceAndOverride
             // only get orders of book
             var ordersOfBook = orders.Where(x => x.Type == "Book");
 
-            var bookDao = new BookDao();
+            var bookDao = _bookDao;
             foreach (var order in ordersOfBook)
             {
                 bookDao.Insert(order);
             }
         }
 
-        protected virtual List<Order> GetOrders()
+        internal virtual List<Order> GetOrders()
         {
             // parse csv file to get orders
             var result = new List<Order>();
