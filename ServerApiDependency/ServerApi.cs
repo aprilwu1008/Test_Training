@@ -10,12 +10,12 @@ namespace ServerApiDependency
 {
     public interface ILogger
     {
-        void Error(string apiPage, int response, string message);
+        void Error(string message);
     }
 
     public class Logger : ILogger
     {
-        public void Error(string apiPage, int response, string message)
+        public void Error(string message)
         {
             TiDebugHelper.Error(message);
         }
@@ -23,10 +23,11 @@ namespace ServerApiDependency
 
     public class ServerApi : IServerApi
     {
-        public ILogger Logger
+        private ILogger _logger;
+
+        public ServerApi(ILogger logger)
         {
-            get { return Logger ?? new Logger(); }
-            set { Logger = value; }
+            _logger = logger;
         }
 
         public ServerResponse CancelGame()
@@ -37,7 +38,7 @@ namespace ServerApiDependency
                 var response = PostToThirdParty(ApiType.CancelGame, apiPage);
                 if (response != (int)ServerResponse.Correct)
                 {
-                    Logger.Error(apiPage, response, $"{apiPage} response has error, ErrorCode = {response}");
+                    _logger.Error($"{apiPage} response has error, ErrorCode = {response}");
                     if (response == (int)ServerResponse.AuthFail)
                     {
                         throw new AuthFailException();
@@ -48,7 +49,7 @@ namespace ServerApiDependency
             }
             catch (WebException e)
             {
-                TiDebugHelper.Error($" WebException: {e}");
+                _logger.Error($" WebException: {e}");
                 SaveFailRequestToDb(ApiType.CancelGame, apiPage);
                 throw e;
             }
@@ -109,7 +110,7 @@ namespace ServerApiDependency
         /// <param name="apiPage">The API page.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        private int PostToThirdParty(ApiType apiType, string apiPage)
+        internal virtual int PostToThirdParty(ApiType apiType, string apiPage)
         {
             // don't implement
             throw new NotImplementedException();
@@ -121,7 +122,7 @@ namespace ServerApiDependency
         /// <param name="apiType">Type of the API.</param>
         /// <param name="apiPage">The API page.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private void SaveFailRequestToDb(ApiType apiType, string apiPage)
+        internal virtual void SaveFailRequestToDb(ApiType apiType, string apiPage)
         {
             // don't implement
             throw new NotImplementedException();
