@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -19,9 +21,10 @@ namespace ServerApiDependency.Tests
         {
             var logger = Substitute.For<ILogger>();
             var serverApi = Substitute.For<ServerApi>(logger);
-
             serverApi.PostToThirdParty(ApiType.CancelGame, Arg.Any<string>()).ThrowsForAnyArgs<WebException>();
-            serverApi.CancelGame();
+
+            Action action = () => { serverApi.CancelGame(); };
+            action.Should().Throw<WebException>();
 
             // Assert SaveFailRequestToDb() be called once
             serverApi.Received(1).SaveFailRequestToDb(ApiType.CancelGame, Arg.Any<string>());
