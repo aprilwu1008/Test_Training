@@ -8,8 +8,27 @@ using System.Net;
 
 namespace ServerApiDependency
 {
+    public interface ILogger
+    {
+        void Error(string apiPage, int response, string message);
+    }
+
+    public class Logger : ILogger
+    {
+        public void Error(string apiPage, int response, string message)
+        {
+            TiDebugHelper.Error(message);
+        }
+    }
+
     public class ServerApi : IServerApi
     {
+        public ILogger Logger
+        {
+            get { return Logger ?? new Logger(); }
+            set { Logger = value; }
+        }
+
         public ServerResponse CancelGame()
         {
             const string apiPage = "cancel.php";
@@ -18,7 +37,7 @@ namespace ServerApiDependency
                 var response = PostToThirdParty(ApiType.CancelGame, apiPage);
                 if (response != (int)ServerResponse.Correct)
                 {
-                    TiDebugHelper.Error($"{apiPage} response has error, ErrorCode = {response}");
+                    Logger.Error(apiPage, response, $"{apiPage} response has error, ErrorCode = {response}");
                     if (response == (int)ServerResponse.AuthFail)
                     {
                         throw new AuthFailException();
